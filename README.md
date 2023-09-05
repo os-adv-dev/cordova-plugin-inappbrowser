@@ -27,7 +27,10 @@ description: Open an in-app browser window.
 
 # cordova-plugin-inappbrowser
 
-:warning: This plugin is SUPPORTED by OutSystems. Customers entitled to Support Services may obtain assistance through Support.
+### OutSystems PS changes
+- Changed flag to allow Back and Forward Navigation Gestures for iOS
+
+:warning: This plugin is NOT SUPPORTED by OutSystems
 
 You can show helpful articles, videos, and web resources inside of your app. Users can view web pages without leaving your app.
 
