@@ -29,6 +29,7 @@ description: Open an in-app browser window.
 
 ### OutSystems PS changes
 - Changed flag to allow Back and Forward Navigation Gestures for iOS
+- Added white background color by default to Android
 
 :warning: This plugin is NOT SUPPORTED by OutSystems
 
