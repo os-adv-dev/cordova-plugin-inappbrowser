@@ -75,7 +75,7 @@ static CDVWKInAppBrowser* instance = nil;
     }
     
     // Things are cleaned up in browserExit.
-    //[self.inAppBrowserViewController close];
+    [self.inAppBrowserViewController close];
 }
 
 - (BOOL) isSystemUrl:(NSURL*)url
