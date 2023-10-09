@@ -19,17 +19,18 @@
 
 #import "CDVInAppBrowserOptions.h"
 
+#import <objc/runtime.h>
+
 @implementation CDVInAppBrowserOptions
 
 - (id)init
 {
     if (self = [super init]) {
         // default values
-        self.usewkwebview = NO;
         self.location = YES;
         self.toolbar = YES;
         self.closebuttoncaption = nil;
-        self.toolbarposition = @"bottom";
+        self.toolbarposition = @"top";
         self.cleardata = NO;
         self.clearcache = NO;
         self.clearsessioncache = NO;
@@ -38,8 +39,6 @@
         self.enableviewportscale = NO;
         self.mediaplaybackrequiresuseraction = NO;
         self.allowinlinemediaplayback = NO;
-        self.keyboarddisplayrequiresuseraction = YES;
-        self.suppressesincrementalrendering = NO;
         self.hidden = NO;
         self.disallowoverscroll = NO;
         self.hidenavigationbuttons = NO;
@@ -69,25 +68,33 @@
             NSString* value = [keyvalue objectAtIndex:1];
             NSString* value_lc = [value lowercaseString];
 
-            BOOL isBoolean = [value_lc isEqualToString:@"yes"] || [value_lc isEqualToString:@"no"];
-            NSNumberFormatter* numberFormatter = [[NSNumberFormatter alloc] init];
-            [numberFormatter setAllowsFloats:YES];
-            BOOL isNumber = [numberFormatter numberFromString:value_lc] != nil;
-
             // set the property according to the key name
             if ([obj respondsToSelector:NSSelectorFromString(key)]) {
-                if (isNumber) {
-                    [obj setValue:[numberFormatter numberFromString:value_lc] forKey:key];
-                } else if (isBoolean) {
-                    [obj setValue:[NSNumber numberWithBool:[value_lc isEqualToString:@"yes"]] forKey:key];
-                } else {
-                    [obj setValue:value forKey:key];
+                NSString *attributes = [self attributesOfPropertyNamed:key];
+                if (attributes) {
+
+                    if ([attributes hasPrefix:@"TB,"]) {
+                        [obj setValue:[NSNumber numberWithBool:[value_lc isEqualToString:@"yes"]] forKey:key];
+
+                    } else if ([attributes hasPrefix:@"T@\"NSNumber\","]) {
+                        NSNumberFormatter* numberFormatter = [[NSNumberFormatter alloc] init];
+                        [numberFormatter setAllowsFloats:YES];
+                        [obj setValue:[numberFormatter numberFromString:value_lc] forKey:key];
+
+                    } else if ([attributes hasPrefix:@"T@\"NSString\","]) {
+                        [obj setValue:value forKey:key];
+                    }
                 }
             }
         }
     }
 
     return obj;
+}
+
++ (NSString*)attributesOfPropertyNamed:(NSString*)propertyName {
+    objc_property_t property = class_getProperty([self class], [propertyName UTF8String]);
+    return property ? [NSString stringWithCString:property_getAttributes(property) encoding:NSUTF8StringEncoding] : nil;
 }
 
 @end
