@@ -120,6 +120,9 @@
           exec(cb, cb, 'InAppBrowser', 'open', [strUrl, strWindowName, strWindowFeatures, pageTitle, pageSubTitle]);
           return iab;
       },
+      close: function (iab) {
+        iab.close();
+      },
       openSystemBrowser: function (strUrl, strWindowName, strWindowFeatures, callbacks) {
         if (window.frames && window.frames[strWindowName]) {
             var origOpenFunc = modulemapper.getOriginalSymbol(window, 'open');
