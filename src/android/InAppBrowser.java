@@ -1500,19 +1500,15 @@ public class InAppBrowser extends CordovaPlugin {
                 inAppWebView.addJavascriptInterface(new JsObject(), "cordova_iab");
             }
 
-                /*
-                #RPD-2199 - Avoiding UserAgent clash in the new Native Shell
+            String overrideUserAgent = preferences.getString("OverrideUserAgent", null);
+            String appendUserAgent = preferences.getString("AppendUserAgent", null);
 
-                String overrideUserAgent = preferences.getString("OverrideUserAgent", null);
-                String appendUserAgent = preferences.getString("AppendUserAgent", null);
-
-                if (overrideUserAgent != null) {
-                    settings.setUserAgentString(overrideUserAgent);
-                }
-                if (appendUserAgent != null) {
-                    settings.setUserAgentString(settings.getUserAgentString() + appendUserAgent);
-                }
-                */
+            if (overrideUserAgent != null) {
+                 settings.setUserAgentString(overrideUserAgent);
+            }
+            if (appendUserAgent != null) {
+                 settings.setUserAgentString(settings.getUserAgentString() + " " + appendUserAgent);
+            }
 
             //Toggle whether this is enabled or not!
             Bundle appSettings = cordova.getActivity().getIntent().getExtras();
